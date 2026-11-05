@@ -7,7 +7,13 @@ authors = [
     { name = "Lansari ibrahim", email = "brahimlansari2002@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "azure-identity>=1.27.0",
+    "azure-storage-file-datalake>=12.26.1",
+    "pyarrow>=26.0.1",
+    "python-dotenv>=1.2.4",
+    "requests>=2.34.2",
+]
 
 [project.scripts]
 bixi-pulse = "bixi_pulse:main"
