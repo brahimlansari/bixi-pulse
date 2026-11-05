@@ -4,8 +4,8 @@ from datetime import date
 from bixi_pulse.ingestion.lake_writer import write_rows
 from bixi_pulse.ingestion.weather import fetch_hourly_weather, to_rows
 
-START_DATE = date(2024, 4, 1)
-END_DATE = date(2024, 11, 30)
+START_DATE = date(2024, 1, 1)
+END_DATE = date(2025, 1, 1)
 
 
 def main() -> None:

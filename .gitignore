@@ -16,3 +16,5 @@ secrets/
 # --- Éditeur / OS ---
 .vscode/
 Thumbs.db
+# --- Données locales ---
+data/

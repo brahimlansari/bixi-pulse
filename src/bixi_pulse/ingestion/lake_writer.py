@@ -1,6 +1,7 @@
 import io
 from datetime import datetime
 from typing import Any
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -37,6 +38,19 @@ def write_rows(rows: list[dict[str, Any]], dataset: str) -> str:
     file_system = get_service_client().get_file_system_client(BRONZE_CONTAINER)
     file_system.get_file_client(path).upload_data(_to_parquet_bytes(rows), overwrite=True)
     return path
+
+def upload_directory(local_dir: Path, remote_prefix: str) -> int:
+    """Envoie tous les fichiers Parquet d'un dossier local vers bronze, en gardant l'arborescence."""
+    file_system = get_service_client().get_file_system_client(BRONZE_CONTAINER)
+    count = 0
+    for local_file in sorted(local_dir.rglob("*.parquet")):
+        relative_path = local_file.relative_to(local_dir).as_posix()
+        remote_path = f"{remote_prefix}/{relative_path}"
+        with local_file.open("rb") as file:
+            file_system.get_file_client(remote_path).upload_data(file, overwrite=True)
+        print(f"  envoyé : {remote_path}")
+        count += 1
+    return count
     
  
     
