@@ -38,4 +38,4 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Capture station status
-        run: uv run python -m bixi_pulse.ingestion.pipelineSS
+        run: uv run python -m bixi_pulse.ingestion.pipeline
