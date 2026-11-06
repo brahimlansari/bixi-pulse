@@ -1,0 +1,41 @@
+name: Ingest station status
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"  # Exécute toutes les heures
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: ingest-station-status
+  cancel-in-progress: true
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+  env:
+    AZURE-STORAGE-ACCOUNT: stbixipulse2611
+    BRONZE-CONTAINER: bronze
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      - name: Capture station status
+        run: uv run python -m bixi_pulse.ingestion.pipeline
