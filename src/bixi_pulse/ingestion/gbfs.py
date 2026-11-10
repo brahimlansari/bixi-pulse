@@ -1,16 +1,29 @@
 from datetime import datetime, timezone
 from typing import Any
 
+import time
+
 import requests
 
 GBFS_URL = "https://gbfs.velobixi.com/gbfs/gbfs.json"
 REQUEST_TIMEOUT_SECONDS = 10  # seconds
+MAX_ATTEMPTS = 3
+RETRY_BACKOFF_SECONDS = 5
 
 def _get_json(url: str) -> dict[str, Any]:
-    """Fetch JSON data from a URL."""
-    response = requests.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
-    response.raise_for_status()
-    return response.json()
+    """Télécharge un JSON, avec plusieurs tentatives en cas d'erreur réseau."""
+    for attempt in range(1, MAX_ATTEMPTS + 1):
+        try:
+            response = requests.get(url, timeout=REQUEST_TIMEOUT_SECONDS)
+            response.raise_for_status()
+            return response.json()
+        except requests.RequestException as error:
+            if attempt == MAX_ATTEMPTS:
+                raise
+            wait = RETRY_BACKOFF_SECONDS * attempt
+            print(f"Tentative {attempt}/{MAX_ATTEMPTS} échouée ({error}). Nouvel essai dans {wait} s...")
+            time.sleep(wait)
+    raise RuntimeError("Inaccessible")
 
 def get_feed_urls(lang: str = "fr") -> dict[str, Any]:
     
