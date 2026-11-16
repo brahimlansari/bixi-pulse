@@ -1,7 +1,7 @@
 import io
 from datetime import datetime
-from typing import Any
 from pathlib import Path
+from typing import Any
 
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -9,7 +9,6 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.filedatalake import DataLakeServiceClient
 
 from bixi_pulse.config import AZURE_STORAGE_ACCOUNT, BRONZE_CONTAINER
-
 
 
 def get_service_client() -> DataLakeServiceClient:
