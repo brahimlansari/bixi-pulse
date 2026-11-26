@@ -18,3 +18,9 @@ secrets/
 Thumbs.db
 # --- Données locales ---
 data/
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+tfplan
+crash.log
